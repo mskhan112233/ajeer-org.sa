@@ -2,39 +2,38 @@ import React from 'react';
 
 export default function AdminHeader({ onReset }) {
   return (
-    <header className="admin-header-clean" dir="rtl">
-      <div className="admin-header-inner">
-        <div className="admin-brand-section">
-          <div className="admin-logo-box">
-            <img src="/dist/img/ajeer-logo.png" alt="أجير" className="admin-logo-img" />
-          </div>
-          <div>
-            <h1 className="admin-heading">لوحة التحكم | إدارة تصاريح أجير</h1>
-            <p className="admin-subheading">
-              تعديل بيانات التصريح وتوليد روابط التحقق المباشرة للعملاء
-            </p>
+    <header className="admin-navbar" dir="rtl">
+      <div className="admin-navbar-container">
+        {/* Brand & Title */}
+        <div className="admin-brand">
+          <img src="/dist/img/ajeer-logo.png" alt="أجير" className="admin-brand-logo" />
+          <div className="admin-brand-divider" />
+          <div className="admin-brand-text">
+            <h1 className="admin-brand-title">إدارة تصاريح أجير</h1>
+            <p className="admin-brand-desc">تعديل البيانات وتوليد روابط التحقق المعتمدة</p>
           </div>
         </div>
 
-        <div className="admin-header-actions">
+        {/* Quick Actions */}
+        <div className="admin-nav-actions">
           <a
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-header-view"
+            className="nav-btn nav-btn-outline"
             title="معاينة الصفحة الرئيسية"
           >
-            <span>معاينة الموقع</span>
-            <span className="arrow">↗</span>
+            <span>عرض الصفحة الرئيسية</span>
+            <span className="arrow-icon">↗</span>
           </a>
 
           <button
             type="button"
             onClick={onReset}
-            className="btn-header-new"
+            className="nav-btn nav-btn-primary"
             title="تفريغ الحقول لإنشاء تصريح جديد"
           >
-            <span>نموذج جديد ＋</span>
+            <span>+ تصريح جديد</span>
           </button>
         </div>
       </div>

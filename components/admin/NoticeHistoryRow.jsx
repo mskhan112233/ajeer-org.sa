@@ -1,9 +1,6 @@
 import React from 'react';
 import CopyButton from '@/components/common/CopyButton';
 
-/**
- * Reusable table row for saved notices in Admin panel
- */
 export default function NoticeHistoryRow({
   notice,
   origin = '',
@@ -15,85 +12,75 @@ export default function NoticeHistoryRow({
   const isNoticeValid = notice.isValid !== false;
 
   return (
-    <tr className="history-table-row">
+    <tr className="history-row">
       {/* Notice Number */}
-      <td className="font-mono font-bold text-slate-800">
-        <div className="flex items-center gap-2">
-          <span className="notice-badge-symbol">#</span>
-          <span>{notice.noticeNumber || 'بدون رقم'}</span>
-        </div>
+      <td className="cell-notice-num">
+        <span className="code-tag">{notice.noticeNumber || 'بدون رقم'}</span>
       </td>
 
       {/* Worker Name */}
-      <td className="font-medium text-slate-700">
-        {notice.workerName || '-'}
+      <td className="cell-worker">
+        <div className="worker-name">{notice.workerName || '-'}</div>
+        <div className="worker-id">{notice.iqamaNumber || ''}</div>
       </td>
 
       {/* Facility Name */}
-      <td className="text-slate-600 max-w-xs truncate" title={notice.facilityName}>
+      <td className="cell-facility" title={notice.facilityName}>
         {notice.facilityName || '-'}
       </td>
 
-      {/* Validity Dates */}
-      <td className="text-xs text-slate-500 font-mono">
-        <div>{notice.startDate || '-'}</div>
-        <div className="text-slate-400">إلى {notice.endDate || '-'}</div>
+      {/* Dates */}
+      <td className="cell-dates">
+        <span>{notice.startDate || '-'}</span>
+        <span className="date-arrow">←</span>
+        <span>{notice.endDate || '-'}</span>
       </td>
 
       {/* Status Badge */}
-      <td>
-        <span
-          className={`status-pill ${
-            isNoticeValid ? 'status-pill-valid' : 'status-pill-invalid'
-          }`}
-        >
-          {isNoticeValid ? 'ساري' : 'منتهي'}
+      <td className="cell-status">
+        <span className={`status-tag ${isNoticeValid ? 'tag-valid' : 'tag-invalid'}`}>
+          <span className="tag-dot" />
+          <span>{isNoticeValid ? 'ساري' : 'منتهي'}</span>
         </span>
       </td>
 
       {/* Actions */}
-      <td className="history-actions-col">
-        <div className="history-actions-group">
-          {/* 1-Click Copy Button */}
+      <td className="cell-actions">
+        <div className="actions-wrapper">
           <CopyButton
             text={directUrl}
-            className="action-btn-clean action-btn-copy"
+            className="row-action-btn btn-copy"
             defaultLabel="نسخ"
-            copiedLabel="تم!"
+            copiedLabel="تم ✓"
             icon="🔗"
           />
 
-          {/* View Link */}
           <a
             href={directUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="action-btn-clean action-btn-view"
+            className="row-action-btn btn-view"
             title="معاينة الصفحة"
           >
-            <span>👁️</span>
-            <span>عرض</span>
+            عرض ↗
           </a>
 
-          {/* Edit Button */}
           <button
             type="button"
             onClick={() => onEdit(notice)}
-            className="action-btn-clean action-btn-edit"
-            title="تعديل هذا التصريح"
+            className="row-action-btn btn-edit"
+            title="تعديل"
           >
-            <span>✏️</span>
-            <span>تعديل</span>
+            تعديل
           </button>
 
-          {/* Delete Button */}
           <button
             type="button"
             onClick={() => onDelete(token)}
-            className="action-btn-clean action-btn-delete"
-            title="حذف هذا التصريح"
+            className="row-action-btn btn-delete"
+            title="حذف"
           >
-            <span>🗑️</span>
+            ✕
           </button>
         </div>
       </td>

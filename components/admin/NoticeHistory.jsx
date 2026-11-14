@@ -24,51 +24,45 @@ export default function NoticeHistory({
   }, [history, search]);
 
   return (
-    <div className="admin-history-card" dir="rtl">
+    <div className="admin-history-panel" dir="rtl">
       {/* Header with Search */}
-      <div className="history-card-header">
-        <div className="flex items-center gap-3">
-          <div className="section-icon">🗂️</div>
-          <div>
-            <h2 className="section-title">سجل التصاريح المحفوظة</h2>
-            <p className="section-subtitle">
-              إجمالي {history.length} تصريح تم إنشاؤه مسبقاً
-            </p>
-          </div>
+      <div className="history-panel-header">
+        <div className="history-title-box">
+          <h2 className="history-title">التصاريح المحفوظة سابقاً</h2>
+          <span className="history-count">({history.length})</span>
         </div>
 
-        <div className="history-search-box">
-          <span className="search-icon">🔍</span>
+        <div className="history-search-wrapper">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="بحث برقم التصريح، اسم العامل، أو الإقامة..."
-            className="search-input"
+            className="history-search-input"
           />
         </div>
       </div>
 
       {/* Table Content */}
-      <div className="history-table-container">
+      <div className="history-table-wrapper">
         {loading ? (
-          <div className="p-8 text-center">
-            <LoadingSpinner text="جاري تحميل سجل التصاريح..." />
+          <div className="history-loading">
+            <LoadingSpinner text="جاري تحميل السجل..." />
           </div>
         ) : filtered.length === 0 ? (
           <EmptyState
-            icon={search ? '🔍' : '📭'}
-            title={search ? 'لا توجد نتائج مطابقة لبحثك' : 'لا توجد تصاريح محفوظة حتى الآن'}
-            description={search ? 'جرّب البحث بكلمات أخرى أو تحقق من رقم الإقامة أو رقم التصريح' : 'قم بتعبئة النموذج أعلاه والضغط على حفظ لإنشاء أول تصريح ورابط'}
+            icon="📭"
+            title={search ? 'لا توجد نتائج مطابقة' : 'لا توجد تصاريح محفوظة'}
+            description={search ? 'جرّب البحث بكلمات أخرى' : 'قم بتعبئة النموذج أعلاه والضغط على حفظ لإنشاء أول تصريح ورابط'}
           />
         ) : (
-          <table className="admin-table">
+          <table className="clean-table">
             <thead>
               <tr>
                 <th>رقم التصريح</th>
-                <th>اسم العامل</th>
+                <th>العامل</th>
                 <th>المنشأة</th>
-                <th>الصلاحية</th>
+                <th>فترة الصلاحية</th>
                 <th>الحالة</th>
                 <th className="text-center">الإجراءات</th>
               </tr>

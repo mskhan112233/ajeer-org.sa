@@ -6,28 +6,26 @@ export default function SelectField({
   value = '',
   onChange,
   options = [],
-  icon = null,
   helperText = '',
   required = false,
   className = ''
 }) {
   return (
-    <div className={`form-group ${className}`}>
+    <div className={`form-field-group ${className}`}>
       {label && (
-        <label className="form-label" htmlFor={name}>
-          {icon && <span className="label-icon">{icon}</span>}
+        <label className="field-label" htmlFor={name}>
           <span>{label}</span>
-          {required && <span className="text-danger ms-1">*</span>}
+          {required && <span className="field-required">*</span>}
         </label>
       )}
-      <div className="input-container">
+      <div className="field-input-box">
         <select
           id={name}
           name={name}
           value={value}
           onChange={(e) => onChange(name, e.target.value)}
           required={required}
-          className="form-input form-select"
+          className="field-input field-select"
         >
           {options.map((opt) => {
             const optVal = typeof opt === 'string' ? opt : opt.value;
@@ -40,7 +38,7 @@ export default function SelectField({
           })}
         </select>
       </div>
-      {helperText && <p className="form-helper-text">{helperText}</p>}
+      {helperText && <p className="field-helper">{helperText}</p>}
     </div>
   );
 }

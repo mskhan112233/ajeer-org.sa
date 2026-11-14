@@ -7,22 +7,20 @@ export default function InputField({
   onChange,
   placeholder = '',
   type = 'text',
-  icon = null,
   helperText = '',
   required = false,
   dir = 'rtl',
   className = ''
 }) {
   return (
-    <div className={`form-group ${className}`}>
+    <div className={`form-field-group ${className}`}>
       {label && (
-        <label className="form-label" htmlFor={name}>
-          {icon && <span className="label-icon">{icon}</span>}
+        <label className="field-label" htmlFor={name}>
           <span>{label}</span>
-          {required && <span className="text-danger ms-1">*</span>}
+          {required && <span className="field-required">*</span>}
         </label>
       )}
-      <div className="input-container">
+      <div className="field-input-box">
         <input
           id={name}
           name={name}
@@ -32,10 +30,10 @@ export default function InputField({
           placeholder={placeholder}
           required={required}
           dir={dir}
-          className="form-input"
+          className="field-input"
         />
       </div>
-      {helperText && <p className="form-helper-text">{helperText}</p>}
+      {helperText && <p className="field-helper">{helperText}</p>}
     </div>
   );
 }

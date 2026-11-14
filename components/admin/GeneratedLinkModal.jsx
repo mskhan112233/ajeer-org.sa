@@ -11,83 +11,76 @@ export default function GeneratedLinkModal({ notice, onClose }) {
 
   return (
     <div className="modal-backdrop" onClick={onClose} dir="rtl">
-      <div className="modal-box-clean" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="modal-header-clean">
-          <div className="modal-check-icon">✓</div>
-          <div>
-            <h3 className="modal-heading">تم حفظ التصريح وإنشاء الرابط بنجاح!</h3>
-            <p className="modal-desc">
-              يمكنك نسخ الرابط المباشر ومشاركته مع العميل لعرض التصريح المعتمد
-            </p>
+        <div className="modal-top">
+          <div className="modal-icon-circle">✓</div>
+          <div className="modal-header-text">
+            <h3 className="modal-title">تم حفظ التصريح وإنشاء الرابط</h3>
+            <p className="modal-subtitle">انسخ الرابط وشاركه لعرض صفحة التحقق المعتمدة فوراً</p>
           </div>
-          <button type="button" className="modal-btn-close" onClick={onClose} aria-label="إغلاق">
+          <button type="button" className="modal-close-icon" onClick={onClose} aria-label="إغلاق">
             ✕
           </button>
         </div>
 
-        {/* Body */}
-        <div className="modal-body-clean">
-          {/* Summary Pills */}
-          <div className="modal-info-summary">
-            <div className="info-item">
-              <span className="info-label">رقم التصريح:</span>
-              <strong className="info-val">#{notice.noticeNumber || "—"}</strong>
-            </div>
-            <div className="info-item">
-              <span className="info-label">اسم العامل:</span>
-              <strong className="info-val">{notice.workerName || "—"}</strong>
-            </div>
-            <div className="info-item">
-              <span className="info-label">الحالة:</span>
-              <span className={`clean-badge ${isValid ? 'badge-active' : 'badge-expired'}`}>
-                {isValid ? "🟢 ساري / فعال" : "🔴 منتهي / ملغي"}
-              </span>
-            </div>
+        {/* Quick summary badges */}
+        <div className="modal-summary-row">
+          <div className="summary-pill">
+            <span className="pill-muted">رقم التصريح:</span>
+            <strong>#{notice.noticeNumber || '—'}</strong>
           </div>
-
-          {/* Generated URL Box */}
-          <div className="modal-url-section">
-            <label className="url-label">رابط التحقق المباشر من التصريح:</label>
-            <div className="url-input-group">
-              <input
-                type="text"
-                readOnly
-                value={url}
-                className="url-field"
-                onClick={(e) => e.target.select()}
-                dir="ltr"
-              />
-              <button
-                type="button"
-                onClick={() => copy(url)}
-                className={`btn-copy-main ${copied ? 'copied' : ''}`}
-              >
-                {copied ? '✓ تم النسخ!' : '📋 نسخ الرابط'}
-              </button>
-            </div>
-            {copied && (
-              <p className="copy-hint-msg">
-                ✓ تم نسخ الرابط بنجاح إلى الحافظة! يمكنك لصقه وإرساله الآن.
-              </p>
-            )}
+          <div className="summary-pill">
+            <span className="pill-muted">العامل:</span>
+            <strong>{notice.workerName || '—'}</strong>
+          </div>
+          <div className="summary-pill">
+            <span className={`status-tag ${isValid ? 'tag-valid' : 'tag-invalid'}`}>
+              <span className="tag-dot" />
+              <span>{isValid ? 'ساري' : 'منتهي'}</span>
+            </span>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="modal-footer-clean">
+        {/* URL Box with 1-Click Copy */}
+        <div className="modal-url-box">
+          <label className="url-box-label">رابط التحقق المباشر:</label>
+          <div className="url-copy-row">
+            <input
+              type="text"
+              readOnly
+              value={url}
+              className="url-input"
+              onClick={(e) => e.target.select()}
+              dir="ltr"
+            />
+            <button
+              type="button"
+              onClick={() => copy(url)}
+              className={`url-copy-btn ${copied ? 'copied' : ''}`}
+            >
+              {copied ? 'تم النسخ ✓' : 'نسخ الرابط'}
+            </button>
+          </div>
+          {copied && (
+            <p className="copy-feedback-msg">✓ تم نسخ الرابط إلى الحافظة بنجاح!</p>
+          )}
+        </div>
+
+        {/* Footer actions */}
+        <div className="modal-bottom">
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-modal-preview"
+            className="modal-btn-preview"
           >
-            <span>معاينة الرابط في صفحة جديدة ↗</span>
+            فتح الرابط ومعاينته ↗
           </a>
           <button
             type="button"
             onClick={onClose}
-            className="btn-modal-close"
+            className="modal-btn-dismiss"
           >
             إغلاق
           </button>

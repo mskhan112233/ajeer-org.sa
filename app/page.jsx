@@ -1,23 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import React from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import VerificationDocument from '@/components/verification/VerificationDocument';
 import { useNoticeData } from '@/hooks/useNoticeData';
-import { DEFAULT_NOTICE_DATA } from '@/lib/constants';
 import { useMounted } from '@/hooks/useMounted';
 import { DEFAULT_NOTICE_DATA } from '@/static-data';
 
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false);
   const isMounted = useMounted();
   const { data } = useNoticeData(DEFAULT_NOTICE_DATA);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (!isMounted) {
     return (

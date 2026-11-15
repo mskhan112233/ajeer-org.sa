@@ -9,6 +9,18 @@ export function useNoticeData(initialData = null, token = null) {
       ...(initialData || {})
     };
     if (token) {
+      // 1. Instant check in local storage if opened on creator device
+      if (typeof window !== 'undefined') {
+        try {
+          const localHistory = JSON.parse(localStorage.getItem('ajeer_notices_history') || '[]');
+          const found = localHistory.find(item => item?.token === token || item?.noticeNumber === token);
+          if (found) {
+            return { ...initial, ...found };
+          }
+        } catch (e) {}
+      }
+
+      // 2. Parse token JWT claims
       try {
         const parsed = parseNoticeToken(token);
         if (parsed) {
@@ -24,13 +36,21 @@ export function useNoticeData(initialData = null, token = null) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 1. If we have token, immediately sync decoded data and fetch fresh data from Firebase
+    // 1. If we have token, fetch full live record from Firestore & API
     if (token) {
-      const parsed = parseNoticeToken(token);
-      if (parsed) {
-        setData(prev => ({ ...prev, ...parsed }));
+      // Direct Firestore fetch
+      if (typeof window !== 'undefined') {
+        import('@/lib/firestoreNotices')
+          .then(({ getNoticeFromFirestore }) => getNoticeFromFirestore(token))
+          .then((cloudNotice) => {
+            if (cloudNotice) {
+              setData(prev => ({ ...prev, ...cloudNotice }));
+            }
+          })
+          .catch(() => {});
       }
 
+      // Server API fetch fallback
       fetch(`/api/notices/${encodeURIComponent(token)}`)
         .then(res => res.json())
         .then(resData => {

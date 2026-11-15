@@ -134,7 +134,7 @@ export default function NoticeHistory({
                 <th>المنشأة (Facility)</th>
                 <th>فترة الصلاحية (Validity Period)</th>
                 <th>الحالة (Status)</th>
-                <th className="text-center">الرابط المعتمد والإجراءات (Link & Actions)</th>
+                <th className="text-center">الإجراءات (Actions)</th>
               </tr>
             </thead>
             <tbody>

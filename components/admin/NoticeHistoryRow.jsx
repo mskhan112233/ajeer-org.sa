@@ -51,7 +51,7 @@ export default function NoticeHistoryRow({
             text={directUrl}
             className="row-action-btn btn-copy"
             defaultLabel="نسخ (Copy)"
-            copiedLabel="تم ✓ (Copied)"
+            copiedLabel="تم ✓"
             icon="🔗"
           />
 
@@ -60,9 +60,9 @@ export default function NoticeHistoryRow({
             target="_blank"
             rel="noopener noreferrer"
             className="row-action-btn btn-view"
-            title="فتح صفحة التحقق المعتمدة (Open Verification Page)"
+            title="عرض صفحة التحقق المعتمدة (View / Open Verification Page)"
           >
-            فتح ↗ (Open)
+            عرض ↗ (View)
           </a>
 
           <button
@@ -71,7 +71,7 @@ export default function NoticeHistoryRow({
             className="row-action-btn btn-edit"
             title="تعديل هذا التصريح (Edit Notice)"
           >
-            تعديل (Edit)
+            ✏️ تعديل (Edit)
           </button>
 
           <button
@@ -80,14 +80,8 @@ export default function NoticeHistoryRow({
             className="row-action-btn btn-delete"
             title="حذف هذا التصريح (Delete Notice)"
           >
-            ✕ حذف (Delete)
+            ✕
           </button>
-        </div>
-        {/* URL Path snippet (Clickable directly to open page) */}
-        <div className="row-url-preview" title="اضغط لفتح صفحة التحقق (Click to open verification page)">
-          <a href={directUrl} target="_blank" rel="noopener noreferrer" className="row-direct-link">
-            <code>{directUrl.length > 50 ? `${directUrl.slice(0, 48)}...` : directUrl}</code>
-          </a>
         </div>
       </td>
     </tr>

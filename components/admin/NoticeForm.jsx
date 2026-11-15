@@ -11,8 +11,28 @@ export default function NoticeForm({
   saving,
   onReset
 }) {
+  const isEditing = Boolean(formData?.token);
+
   return (
     <form onSubmit={onSubmit} className="admin-form-panel" dir="rtl">
+      {/* Edit Mode Notification Banner */}
+      {isEditing && (
+        <div className="form-edit-banner">
+          <div className="edit-banner-info">
+            <span className="edit-badge">وضع التعديل ✏️</span>
+            <span>جاري تعديل بيانات التصريح: <strong>#{formData.noticeNumber || ''}</strong></span>
+          </div>
+          <button
+            type="button"
+            onClick={onReset}
+            className="btn-cancel-edit"
+            title="إلغاء التعديل والعودة لإنشاء تصريح جديد"
+          >
+            ✕ إلغاء التعديل والبدء بتصريح جديد
+          </button>
+        </div>
+      )}
+
       {/* Top Bar: Status Selector */}
       <div className="form-panel-header">
         <StatusToggle
@@ -153,7 +173,9 @@ export default function NoticeForm({
           className="submit-btn"
         >
           {saving ? (
-            <span>جاري الحفظ والإنشاء...</span>
+            <span>جاري حفظ التعديلات...</span>
+          ) : isEditing ? (
+            <span>💾 حفظ التعديلات وتحديث الرابط</span>
           ) : (
             <span>حفظ التصريح وإنشاء الرابط المباشر 🔗</span>
           )}

@@ -1137,6 +1137,52 @@
   text-align: center;
 }
 
+/* Edit Mode Banner */
+.form-edit-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #eff6ff;
+  border-bottom: 1px solid #bfdbfe;
+  padding: 12px 20px;
+}
+
+.edit-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #1e40af;
+}
+
+.edit-badge {
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.btn-cancel-edit {
+  background: #ffffff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.btn-cancel-edit:hover {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
 /* 7. Mobile Responsive */
 @media (max-width: 680px) {
   .admin-navbar-container {

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { DEFAULT_NOTICE_DATA } from '@/lib/constants';
 import { generateNoticeToken } from '@/lib/token';
-import { saveNoticeToFirestore } from '@/lib/firestoreNotices';
 
 export function useAdminNotices() {
   const [formData, setFormData] = useState({ ...DEFAULT_NOTICE_DATA });
@@ -50,14 +49,15 @@ export function useAdminNotices() {
     }));
   }, []);
 
-  // Save notice and generate link
+  // Save notice and generate link (or update existing)
   const handleSave = useCallback(async (e) => {
     if (e) e.preventDefault();
     setSaving(true);
     setError(null);
 
     try {
-      const token = generateNoticeToken(formData);
+      // Use existing token if editing, or generate new token if creating
+      const token = formData.token || generateNoticeToken(formData);
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
       const fullUrl = `${origin}/notice-verification/${token}`;
 
@@ -65,9 +65,21 @@ export function useAdminNotices() {
         ...formData,
         token,
         url: fullUrl,
-        createdAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        createdAt: formData.createdAt || new Date().toISOString()
       };
 
+      // 1. Direct browser sync to Firestore
+      try {
+        if (typeof window !== 'undefined') {
+          const { saveNoticeToFirestore } = await import('@/lib/firestoreNotices');
+          await saveNoticeToFirestore(newRecord);
+        }
+      } catch (fErr) {
+        console.warn("Direct Firestore sync note:", fErr);
+      }
+
+      // 2. Server API sync
       const res = await fetch('/api/notices', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,16 +91,10 @@ export function useAdminNotices() {
         throw new Error(resData.error || 'فشل في حفظ التصريح');
       }
 
-      // Also ensure written directly to Firestore from browser
-      try {
-        await saveNoticeToFirestore(newRecord);
-      } catch (fErr) {
-        console.warn("Direct Firestore sync note:", fErr);
-      }
-
+      // 3. Update localStorage history
       try {
         const localHistory = JSON.parse(localStorage.getItem('ajeer_notices_history') || '[]');
-        const updated = [newRecord, ...localHistory.filter(item => item.token !== token)].slice(0, 50);
+        const updated = [newRecord, ...localHistory.filter(item => item.token !== token && item.noticeNumber !== newRecord.noticeNumber)].slice(0, 50);
         localStorage.setItem('ajeer_notices_history', JSON.stringify(updated));
       } catch (e) {}
 
@@ -105,23 +111,6 @@ export function useAdminNotices() {
     }
   }, [formData, fetchHistory]);
 
-  // Delete notice
-  const handleDelete = useCallback(async (token) => {
-    if (!token) return;
-    try {
-      await fetch(`/api/notices/${encodeURIComponent(token)}`, {
-        method: 'DELETE'
-      });
-      setHistory(prev => prev.filter(item => item.token !== token));
-      try {
-        const localHistory = JSON.parse(localStorage.getItem('ajeer_notices_history') || '[]');
-        localStorage.setItem('ajeer_notices_history', JSON.stringify(localHistory.filter(item => item.token !== token)));
-      } catch (e) {}
-    } catch (err) {
-      console.error("Delete error:", err);
-    }
-  }, []);
-
   // Reset form
   const handleReset = useCallback(() => {
     setFormData({
@@ -135,6 +124,46 @@ export function useAdminNotices() {
     });
     setCreatedNotice(null);
   }, []);
+
+  // Delete notice (from Firestore, server storage, and UI)
+  const handleDelete = useCallback(async (token) => {
+    if (!token) return;
+    const confirmDelete = typeof window !== 'undefined'
+      ? window.confirm("هل أنت متأكد من حذف هذا التصريح والرابط نهائياً؟")
+      : true;
+    if (!confirmDelete) return;
+
+    try {
+      // 1. Direct browser delete from Firestore
+      if (typeof window !== 'undefined') {
+        const { deleteNoticeFromFirestore } = await import('@/lib/firestoreNotices');
+        await deleteNoticeFromFirestore(token);
+      }
+    } catch (err) {
+      console.warn("Direct Firestore delete warning:", err);
+    }
+
+    try {
+      // 2. Server API delete
+      await fetch(`/api/notices/${encodeURIComponent(token)}`, {
+        method: 'DELETE'
+      });
+    } catch (err) {
+      console.error("API delete error:", err);
+    }
+
+    // 3. Immediately update UI state
+    setHistory(prev => prev.filter(item => item.token !== token && item.noticeNumber !== token));
+    try {
+      const localHistory = JSON.parse(localStorage.getItem('ajeer_notices_history') || '[]');
+      localStorage.setItem('ajeer_notices_history', JSON.stringify(localHistory.filter(item => item.token !== token && item.noticeNumber !== token)));
+    } catch (e) {}
+
+    // 4. Reset form if deleted notice was currently open in editor
+    if (formData.token === token || formData.noticeNumber === token) {
+      handleReset();
+    }
+  }, [formData.token, formData.noticeNumber, handleReset]);
 
   // Load an existing record into form
   const handleEdit = useCallback((record) => {

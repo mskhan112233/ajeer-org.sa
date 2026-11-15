@@ -3,18 +3,29 @@ import { DEFAULT_NOTICE_DATA } from '@/lib/constants';
 import { parseNoticeToken } from '@/lib/token';
 
 export function useNoticeData(initialData = null, token = null) {
-  const [data, setData] = useState(() => ({
-    ...DEFAULT_NOTICE_DATA,
-    ...(initialData || {})
-  }));
+  const [data, setData] = useState(() => {
+    let initial = {
+      ...DEFAULT_NOTICE_DATA,
+      ...(initialData || {})
+    };
+    if (token) {
+      try {
+        const parsed = parseNoticeToken(token);
+        if (parsed) {
+          initial = { ...initial, ...parsed };
+        }
+      } catch (e) {
+        console.warn("Initial token parse note:", e);
+      }
+    }
+    return initial;
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 1. If we have token, decode and fetch specific notice from Firebase
+    // 1. If we have token, immediately sync decoded data and fetch fresh data from Firebase
     if (token) {
-      setLoading(true);
-
       const parsed = parseNoticeToken(token);
       if (parsed) {
         setData(prev => ({ ...prev, ...parsed }));
@@ -29,9 +40,6 @@ export function useNoticeData(initialData = null, token = null) {
         })
         .catch(err => {
           console.warn("API fetch error, using decoded token data:", err);
-        })
-        .finally(() => {
-          setLoading(false);
         });
     } else {
       // 2. If on root main page without token: fetch live notice directly from Firebase!

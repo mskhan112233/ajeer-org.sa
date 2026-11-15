@@ -182,10 +182,10 @@ export function useAdminNotices() {
   }, []);
 
   // Delete notice (from Firestore, server storage, and UI)
-  const handleDelete = useCallback(async (token) => {
-    if (!token) return;
+  const handleDelete = useCallback(async (token, noticeNumber) => {
+    if (!token && !noticeNumber) return;
     const confirmDelete = typeof window !== 'undefined'
-      ? window.confirm("هل أنت متأكد من حذف هذا التصريح والرابط نهائياً؟")
+      ? window.confirm("هل أنت متأكد من حذف هذا التصريح والرابط نهائياً؟ (Are you sure you want to delete this notice permanently?)")
       : true;
     if (!confirmDelete) return;
 
@@ -193,7 +193,8 @@ export function useAdminNotices() {
       // 1. Direct browser delete from Firestore
       if (typeof window !== 'undefined') {
         const { deleteNoticeFromFirestore } = await import('@/lib/firestoreNotices');
-        await deleteNoticeFromFirestore(token);
+        if (token) await deleteNoticeFromFirestore(token);
+        if (noticeNumber && noticeNumber !== token) await deleteNoticeFromFirestore(noticeNumber);
       }
     } catch (err) {
       console.warn("Direct Firestore delete warning:", err);
@@ -201,22 +202,36 @@ export function useAdminNotices() {
 
     try {
       // 2. Server API delete
-      await fetch(`/api/notices/${encodeURIComponent(token)}`, {
+      const target = token || noticeNumber;
+      await fetch(`/api/notices/${encodeURIComponent(target)}`, {
         method: 'DELETE'
       });
     } catch (err) {
       console.error("API delete error:", err);
     }
 
-    // 3. Immediately update UI state
-    setHistory(prev => prev.filter(item => item.token !== token && item.noticeNumber !== token));
+    // 3. Immediately update UI state (remove from history)
+    setHistory(prev => (prev || []).filter(item => {
+      const matchToken = token && item.token === token;
+      const matchNum = noticeNumber && item.noticeNumber === noticeNumber;
+      return !matchToken && !matchNum;
+    }));
+
     try {
       const localHistory = JSON.parse(localStorage.getItem('ajeer_notices_history') || '[]');
-      localStorage.setItem('ajeer_notices_history', JSON.stringify(localHistory.filter(item => item.token !== token && item.noticeNumber !== token)));
+      const filtered = localHistory.filter(item => {
+        const matchToken = token && item.token === token;
+        const matchNum = noticeNumber && item.noticeNumber === noticeNumber;
+        return !matchToken && !matchNum;
+      });
+      localStorage.setItem('ajeer_notices_history', JSON.stringify(filtered));
     } catch (e) {}
 
     // 4. Reset form if deleted notice was currently open in editor
-    if (formData.token === token || formData.noticeNumber === token) {
+    if (
+      (token && formData.token === token) || 
+      (noticeNumber && formData.noticeNumber === noticeNumber)
+    ) {
       handleReset();
     }
   }, [formData.token, formData.noticeNumber, handleReset]);

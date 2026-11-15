@@ -50,7 +50,7 @@ export default function NoticeHistoryRow({
           <CopyButton
             text={directUrl}
             className="row-action-btn btn-copy"
-            defaultLabel="نسخ (Copy)"
+            defaultLabel="نسخ"
             copiedLabel="تم ✓"
             icon="🔗"
           />
@@ -60,25 +60,25 @@ export default function NoticeHistoryRow({
             target="_blank"
             rel="noopener noreferrer"
             className="row-action-btn btn-view"
-            title="عرض صفحة التحقق المعتمدة (View / Open Verification Page)"
+            title="عرض صفحة التحقق المعتمدة (View / Open Notice Page)"
           >
-            عرض ↗ (View)
+            عرض ↗
           </a>
 
           <button
             type="button"
-            onClick={() => onEdit(notice)}
+            onClick={() => onEdit && onEdit(notice)}
             className="row-action-btn btn-edit"
-            title="تعديل هذا التصريح (Edit Notice)"
+            title="تعديل هذا التصريح في فايربيس (Edit Notice in Firebase)"
           >
-            ✏️ تعديل (Edit)
+            ✏️ تعديل
           </button>
 
           <button
             type="button"
-            onClick={() => onDelete(token)}
+            onClick={() => onDelete && onDelete(token, notice.noticeNumber)}
             className="row-action-btn btn-delete"
-            title="حذف هذا التصريح (Delete Notice)"
+            title="حذف هذا التصريح نهائياً من فايربيس (Delete Notice from Firebase)"
           >
             ✕
           </button>

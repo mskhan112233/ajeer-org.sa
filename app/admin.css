@@ -125,9 +125,14 @@
 
 /* 2. Page Container */
 .admin-container-clean {
-  max-width: 920px;
+  max-width: 1240px;
   margin: 24px auto 0;
   padding: 0 16px;
+}
+
+.admin-form-panel {
+  max-width: 920px;
+  margin: 0 auto;
 }
 
 .admin-error-box {
@@ -525,7 +530,7 @@
 }
 
 .clean-table th {
-  padding: 12px 14px;
+  padding: 10px 12px;
   font-weight: 700;
   color: #475569;
   font-size: 12px;
@@ -533,11 +538,28 @@
 }
 
 .clean-table td {
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-bottom: 1px solid #f1f5f9;
   vertical-align: middle;
   word-break: break-word;
   overflow-wrap: anywhere;
+}
+
+.clean-table th.cell-actions-header,
+.clean-table td.cell-actions {
+  position: sticky;
+  left: 0;
+  background: #ffffff;
+  z-index: 2;
+  box-shadow: 3px 0 6px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+  text-align: center;
+  min-width: 220px;
+}
+
+.clean-table thead th.cell-actions-header {
+  background: #f8fafc;
+  z-index: 3;
 }
 
 .cell-notice-num {
@@ -564,12 +586,6 @@
 .cell-status {
   white-space: nowrap;
   text-align: center;
-}
-
-.cell-actions {
-  white-space: nowrap;
-  text-align: center;
-  min-width: 220px;
 }
 
 .history-row:hover {

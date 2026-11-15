@@ -11,17 +11,15 @@ export function useNoticeData(initialData = null, token = null) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // If we have token, try to decode or fetch it
+    // 1. If we have token, decode and fetch specific notice from Firebase
     if (token) {
       setLoading(true);
 
-      // 1. Immediate client decode from token
       const parsed = parseNoticeToken(token);
       if (parsed) {
         setData(prev => ({ ...prev, ...parsed }));
       }
 
-      // 2. Fetch latest saved data from API
       fetch(`/api/notices/${encodeURIComponent(token)}`)
         .then(res => res.json())
         .then(resData => {
@@ -31,6 +29,26 @@ export function useNoticeData(initialData = null, token = null) {
         })
         .catch(err => {
           console.warn("API fetch error, using decoded token data:", err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      // 2. If on root main page without token: fetch live notice directly from Firebase!
+      setLoading(true);
+      fetch('/api/notices')
+        .then(res => res.json())
+        .then(resData => {
+          if (resData && resData.success && Array.isArray(resData.data) && resData.data.length > 0) {
+            // Find official notice (TQ6258541) or latest active notice from Firebase
+            const activeNotice = resData.data.find(d => d.noticeNumber === "TQ6258541") || resData.data[0];
+            if (activeNotice) {
+              setData(prev => ({ ...prev, ...activeNotice }));
+            }
+          }
+        })
+        .catch(err => {
+          console.warn("API root fetch note:", err);
         })
         .finally(() => {
           setLoading(false);

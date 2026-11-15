@@ -1,7 +1,9 @@
 import React from 'react';
 import VerificationResultBadge from './VerificationResultBadge';
+import { useAppAssets } from '@/hooks/useAppAssets';
 
 export default function VerificationHeader({ data = {} }) {
+  const { assets } = useAppAssets();
   const isValid = data?.isValid !== false;
   const statusText = data?.statusText || (isValid ? "ساري / فعال" : "منتهي / ملغي");
   const ajeerAlt = data?.headerLogoAjeerAlt || "أجير";
@@ -15,12 +17,12 @@ export default function VerificationHeader({ data = {} }) {
           <td className="verification-header__logos">
             <img
               className="verification-logo verification-logo--ajeer"
-              src="/dist/img/ajeer-logo.png"
+              src={assets.ajeerLogo}
               alt={ajeerAlt}
             />
             <img
               className="verification-logo verification-logo--hrsd"
-              src="/dist/img/mlsd-logo.png"
+              src={assets.mlsdLogo}
               alt={mlsdAlt}
             />
           </td>

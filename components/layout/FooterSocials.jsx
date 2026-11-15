@@ -1,9 +1,11 @@
 import React from 'react';
+import { useAppAssets } from '@/hooks/useAppAssets';
 
 /**
  * Reusable footer social and contact icon links (Twitter/X, Telegram, Phone)
  */
 export default function FooterSocials({ data = {} }) {
+  const { assets } = useAppAssets();
   const twitterUrl = data.footerTwitterUrl || "https://twitter.com/AjeerSA";
   
   const telegramUrl = data.footerTelegramUrl || (
@@ -36,7 +38,7 @@ export default function FooterSocials({ data = {} }) {
           className="mainFooter__socialsLink d-inline-block px-2"
           title="Twitter / X"
         >
-          <img src="/dist/img/x-twitter.svg" alt="X" className="footer-x-icon" />
+          <img src={assets.xTwitterLogo} alt="X" className="footer-x-icon" />
         </a>
 
         {/* Telegram / Email */}

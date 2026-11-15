@@ -101,6 +101,7 @@ export function useAdminNotices() {
       const fullUrl = `${origin}/notice-verification/${token}`;
 
       const newRecord = {
+        ...DEFAULT_NOTICE_DATA,
         ...formData,
         token,
         url: fullUrl,
@@ -109,25 +110,34 @@ export function useAdminNotices() {
       };
 
       // 1. Direct browser sync to Firestore
+      let firestoreOk = false;
       try {
         if (typeof window !== 'undefined') {
           const { saveNoticeToFirestore } = await import('@/lib/firestoreNotices');
-          await saveNoticeToFirestore(newRecord);
+          const fRes = await saveNoticeToFirestore(newRecord);
+          if (fRes && fRes.success) {
+            firestoreOk = true;
+          } else if (fRes && fRes.error) {
+            console.warn("Direct Firestore save message:", fRes.error);
+          }
         }
       } catch (fErr) {
         console.warn("Direct Firestore sync note:", fErr);
       }
 
       // 2. Server API sync
-      const res = await fetch('/api/notices', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newRecord)
-      });
-      const resData = await res.json();
-
-      if (!resData.success) {
-        throw new Error(resData.error || 'فشل في حفظ التصريح');
+      try {
+        const res = await fetch('/api/notices', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newRecord)
+        });
+        const resData = await res.json();
+        if (!resData.success) {
+          console.warn("Server API sync response:", resData.error);
+        }
+      } catch (apiErr) {
+        console.warn("API sync call error:", apiErr);
       }
 
       // 3. Update localStorage history
@@ -137,9 +147,19 @@ export function useAdminNotices() {
         localStorage.setItem('ajeer_notices_history', JSON.stringify(updated));
       } catch (e) {}
 
+      // 4. Update UI states immediately
+      setFormData(newRecord);
       setCreatedNotice(newRecord);
       setShowModal(true);
       setIsDirty(false);
+
+      // 5. Update history table immediately (newest record at the very TOP)
+      setHistory(prev => {
+        const remaining = (prev || []).filter(item => item.token !== token && item.noticeNumber !== newRecord.noticeNumber);
+        return [newRecord, ...remaining];
+      });
+
+      // 6. Refresh full history from Firestore
       fetchHistory();
       return newRecord;
     } catch (err) {

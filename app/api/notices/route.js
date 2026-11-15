@@ -15,16 +15,23 @@ export async function GET() {
     // Local fallback
     const localNotices = getSavedNotices() || [];
 
-    // Merge by token, giving Firestore priority or local fallback
+    // Merge by token or noticeNumber, giving Firestore priority
     const mergedMap = new Map();
     localNotices.forEach((n) => {
-      if (n && n.token) mergedMap.set(n.token, n);
+      const key = n?.token || n?.noticeNumber;
+      if (key) mergedMap.set(key, n);
     });
     firestoreNotices.forEach((n) => {
-      if (n && n.token) mergedMap.set(n.token, n);
+      const key = n?.token || n?.noticeNumber;
+      if (key) mergedMap.set(key, n);
     });
 
     const notices = Array.from(mergedMap.values());
+    notices.sort((a, b) => {
+      const timeA = new Date(a.updatedAt || a.createdAt || 0).getTime();
+      const timeB = new Date(b.updatedAt || b.createdAt || 0).getTime();
+      return timeB - timeA;
+    });
     return NextResponse.json({ success: true, data: notices });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

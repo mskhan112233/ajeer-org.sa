@@ -41,16 +41,19 @@ export async function POST(request) {
       );
     }
 
-    // 1. Save locally first for instant, guaranteed zero-delay availability
+    // 1. Save locally for fallback
     const res = saveNotice(body);
     if (!res.success) {
       return NextResponse.json({ success: false, error: res.error }, { status: 500 });
     }
 
-    // 2. Sync to Firestore in background
-    saveNoticeToFirestore(body).catch((err) => {
-      console.warn('Firestore background sync warning:', err.message);
-    });
+    // 2. Ensure saved to Cloud Firestore
+    try {
+      const cloudRes = await saveNoticeToFirestore(body);
+      console.log('Notice saved to Firestore:', body.noticeNumber, cloudRes);
+    } catch (err) {
+      console.error('Firestore save error:', err);
+    }
 
     return NextResponse.json({ success: true, data: body });
   } catch (error) {

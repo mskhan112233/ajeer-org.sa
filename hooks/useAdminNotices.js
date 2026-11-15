@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { DEFAULT_NOTICE_DATA } from '@/lib/constants';
 import { generateNoticeToken } from '@/lib/token';
+import { saveNoticeToFirestore } from '@/lib/firestoreNotices';
 
 export function useAdminNotices() {
   const [formData, setFormData] = useState({ ...DEFAULT_NOTICE_DATA });
@@ -76,6 +77,13 @@ export function useAdminNotices() {
 
       if (!resData.success) {
         throw new Error(resData.error || 'فشل في حفظ التصريح');
+      }
+
+      // Also ensure written directly to Firestore from browser
+      try {
+        await saveNoticeToFirestore(newRecord);
+      } catch (fErr) {
+        console.warn("Direct Firestore sync note:", fErr);
       }
 
       try {

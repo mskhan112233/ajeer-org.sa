@@ -7,7 +7,9 @@ export default function NoticeHistory({
   history = [],
   onEdit,
   onDelete,
-  loading = false
+  loading = false,
+  onNewNotice,
+  onRefresh
 }) {
   const [search, setSearch] = useState('');
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
@@ -23,23 +25,78 @@ export default function NoticeHistory({
     );
   }, [history, search]);
 
+  const validCount = useMemo(() => history.filter(h => h.isValid !== false).length, [history]);
+  const invalidCount = useMemo(() => history.filter(h => h.isValid === false).length, [history]);
+
   return (
     <div className="admin-history-panel" dir="rtl">
-      {/* Header with Search */}
+      {/* Top Stats Chips */}
+      <div className="history-stats-bar">
+        <div className="stat-chip stat-chip-all">
+          <span className="stat-chip-label">إجمالي الروابط والتصاريح:</span>
+          <span className="stat-chip-val">{history.length}</span>
+        </div>
+        <div className="stat-chip stat-chip-valid">
+          <span className="stat-chip-dot dot-valid" />
+          <span className="stat-chip-label">تصاريح سارية:</span>
+          <span className="stat-chip-val">{validCount}</span>
+        </div>
+        <div className="stat-chip stat-chip-invalid">
+          <span className="stat-chip-dot dot-invalid" />
+          <span className="stat-chip-label">تصاريح منتهية:</span>
+          <span className="stat-chip-val">{invalidCount}</span>
+        </div>
+      </div>
+
+      {/* Header with Search and Actions */}
       <div className="history-panel-header">
         <div className="history-title-box">
-          <h2 className="history-title">التصاريح المحفوظة سابقاً</h2>
+          <h2 className="history-title">سجل جميع البيانات والروابط</h2>
           <span className="history-count">({history.length})</span>
         </div>
 
-        <div className="history-search-wrapper">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="بحث برقم التصريح، اسم العامل، أو الإقامة..."
-            className="history-search-input"
-          />
+        <div className="history-header-actions">
+          <div className="history-search-wrapper">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="بحث برقم التصريح، اسم العامل، أو الإقامة..."
+              className="history-search-input"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="search-clear-btn"
+                title="مسح البحث"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {onRefresh && (
+            <button
+              type="button"
+              onClick={onRefresh}
+              className="btn-history-refresh"
+              title="تحديث البيانات من السحابة"
+            >
+              🔄 تحديث
+            </button>
+          )}
+
+          {onNewNotice && (
+            <button
+              type="button"
+              onClick={onNewNotice}
+              className="btn-history-add"
+              title="إنشاء تصريح جديد"
+            >
+              + تصريح جديد
+            </button>
+          )}
         </div>
       </div>
 
@@ -50,11 +107,24 @@ export default function NoticeHistory({
             <LoadingSpinner text="جاري تحميل السجل..." />
           </div>
         ) : filtered.length === 0 ? (
-          <EmptyState
-            icon="📭"
-            title={search ? 'لا توجد نتائج مطابقة' : 'لا توجد تصاريح محفوظة'}
-            description={search ? 'جرّب البحث بكلمات أخرى' : 'قم بتعبئة النموذج أعلاه والضغط على حفظ لإنشاء أول تصريح ورابط'}
-          />
+          <div className="empty-state-wrapper">
+            <EmptyState
+              icon="📭"
+              title={search ? 'لا توجد نتائج مطابقة' : 'لا توجد تصاريح أو روابط محفوظة'}
+              description={search ? 'جرّب البحث بكلمات أخرى أو مسح حقل البحث' : 'لم يتم إنشاء أي تصاريح بعد. اضغط على الزر أدناه لإنشاء أول تصريح ورابط'}
+            />
+            {!search && onNewNotice && (
+              <div className="empty-action-box">
+                <button
+                  type="button"
+                  onClick={onNewNotice}
+                  className="nav-btn nav-btn-primary"
+                >
+                  + إنشاء تصريح جديد الآن
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <table className="clean-table">
             <thead>
@@ -64,7 +134,7 @@ export default function NoticeHistory({
                 <th>المنشأة</th>
                 <th>فترة الصلاحية</th>
                 <th>الحالة</th>
-                <th className="text-center">الإجراءات</th>
+                <th className="text-center">الرابط المعتمد والإجراءات</th>
               </tr>
             </thead>
             <tbody>

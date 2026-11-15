@@ -1,7 +1,7 @@
 import React from 'react';
 import { useClipboard } from '@/hooks/useClipboard';
 
-export default function GeneratedLinkModal({ notice, onClose }) {
+export default function GeneratedLinkModal({ notice, onClose, onViewAll }) {
   const { copied, copy } = useClipboard();
 
   if (!notice) return null;
@@ -77,6 +77,20 @@ export default function GeneratedLinkModal({ notice, onClose }) {
           >
             فتح الرابط ومعاينته ↗
           </a>
+
+          {onViewAll && (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onViewAll();
+              }}
+              className="modal-btn-view-all"
+            >
+              📋 عرض في سجل الروابط (All Data)
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onClose}

@@ -148,6 +148,7 @@ export function useAdminNotices() {
     handleSave,
     handleDelete,
     handleReset,
-    handleEdit
+    handleEdit,
+    fetchHistory
   };
 }

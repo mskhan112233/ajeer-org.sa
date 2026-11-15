@@ -18,7 +18,7 @@ export default function NoticeHistoryRow({
         <span className="code-tag">{notice.noticeNumber || 'بدون رقم'}</span>
       </td>
 
-      {/* Worker Name */}
+      {/* Worker Name & Iqama */}
       <td className="cell-worker">
         <div className="worker-name">{notice.workerName || '-'}</div>
         <div className="worker-id">{notice.iqamaNumber || ''}</div>
@@ -29,7 +29,7 @@ export default function NoticeHistoryRow({
         {notice.facilityName || '-'}
       </td>
 
-      {/* Dates */}
+      {/* Validity Dates */}
       <td className="cell-dates">
         <span>{notice.startDate || '-'}</span>
         <span className="date-arrow">←</span>
@@ -44,14 +44,14 @@ export default function NoticeHistoryRow({
         </span>
       </td>
 
-      {/* Actions */}
+      {/* Generated Link & Actions */}
       <td className="cell-actions">
         <div className="actions-wrapper">
           <CopyButton
             text={directUrl}
             className="row-action-btn btn-copy"
-            defaultLabel="نسخ"
-            copiedLabel="تم ✓"
+            defaultLabel="نسخ الرابط"
+            copiedLabel="تم النسخ ✓"
             icon="🔗"
           />
 
@@ -60,16 +60,16 @@ export default function NoticeHistoryRow({
             target="_blank"
             rel="noopener noreferrer"
             className="row-action-btn btn-view"
-            title="معاينة الصفحة"
+            title="معاينة رابط التحقق المباشر"
           >
-            عرض ↗
+            فتح ↗
           </a>
 
           <button
             type="button"
             onClick={() => onEdit(notice)}
             className="row-action-btn btn-edit"
-            title="تعديل"
+            title="تعديل هذا التصريح"
           >
             تعديل
           </button>
@@ -78,10 +78,14 @@ export default function NoticeHistoryRow({
             type="button"
             onClick={() => onDelete(token)}
             className="row-action-btn btn-delete"
-            title="حذف"
+            title="حذف هذا التصريح"
           >
             ✕
           </button>
+        </div>
+        {/* URL Path snippet */}
+        <div className="row-url-preview" title={directUrl}>
+          <code>{directUrl.length > 50 ? `${directUrl.slice(0, 48)}...` : directUrl}</code>
         </div>
       </td>
     </tr>

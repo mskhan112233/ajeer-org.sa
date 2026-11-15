@@ -337,6 +337,71 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-panel-footer.has-unsaved-changes {
+  background: #fefce8;
+  border-top-color: #fde047;
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.unsaved-alert-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef08a;
+  color: #854d0e;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border: 1px solid #facc15;
+}
+
+.unsaved-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ca8a04;
+  box-shadow: 0 0 0 2px rgba(202, 138, 4, 0.3);
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.footer-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.submit-btn.pulse-save {
+  background: #15803d;
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.25);
+  font-weight: 700;
+}
+
+.submit-btn.pulse-save:hover {
+  background: #166534;
+}
+
+.row-direct-link {
+  text-decoration: none;
+  display: block;
+}
+
+.row-direct-link:hover code {
+  background: #e2e8f0;
+  color: var(--admin-primary);
+  border-color: var(--admin-primary);
 }
 
 .submit-btn {

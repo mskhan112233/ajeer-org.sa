@@ -20,6 +20,7 @@ export default function AdminPage() {
     showModal,
     setShowModal,
     error,
+    isDirty,
     handleChange,
     handleStatusChange,
     handleSave,
@@ -66,7 +67,7 @@ export default function AdminPage() {
             className={`admin-view-tab ${activeView === 'create' ? 'active' : ''}`}
           >
             <span className="tab-icon">➕</span>
-            <span>إنشاء وتعديل تصريح</span>
+            <span>إنشاء وتعديل تصريح (Create & Edit Notice)</span>
           </button>
 
           <button
@@ -75,7 +76,7 @@ export default function AdminPage() {
             className={`admin-view-tab ${activeView === 'all' ? 'active' : ''}`}
           >
             <span className="tab-icon">📋</span>
-            <span>جميع البيانات والروابط (All Data)</span>
+            <span>جميع البيانات والروابط (All Data & Links)</span>
             <span className="tab-count-pill">{history.length}</span>
           </button>
         </div>
@@ -90,6 +91,7 @@ export default function AdminPage() {
               onSubmit={handleSave}
               saving={saving}
               onReset={handleReset}
+              isDirty={isDirty}
             />
 
             {/* Quick banner to jump to All Data */}
@@ -97,8 +99,8 @@ export default function AdminPage() {
               <div className="banner-text">
                 <span className="banner-icon">📋</span>
                 <div>
-                  <strong>سجل الروابط والتصاريح المنشأة ({history.length})</strong>
-                  <p>يمكنك استعراض ونسخ وتعديل جميع الروابط والتصاريح المحفوظة في أي وقت</p>
+                  <strong>سجل الروابط والتصاريح المنشأة (Saved Notices & Links Record) ({history.length})</strong>
+                  <p>يمكنك استعراض ونسخ وتعديل جميع الروابط والتصاريح في أي وقت (Browse, copy & edit all links anytime)</p>
                 </div>
               </div>
               <button
@@ -106,7 +108,7 @@ export default function AdminPage() {
                 onClick={() => setActiveView('all')}
                 className="btn-banner-all-data"
               >
-                <span>عرض جميع الروابط (All Data)</span>
+                <span>عرض جميع الروابط (View All Data & Links)</span>
                 <span className="arrow-left">←</span>
               </button>
             </div>

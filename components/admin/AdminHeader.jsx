@@ -14,11 +14,11 @@ export default function AdminHeader({
       <div className="admin-navbar-container">
         {/* Brand & Title */}
         <div className="admin-brand">
-          <img src={assets.ajeerLogo} alt="أجير" className="admin-brand-logo" />
+          <img src={assets.ajeerLogo} alt="أجير (Ajeer)" className="admin-brand-logo" />
           <div className="admin-brand-divider" />
           <div className="admin-brand-text">
-            <h1 className="admin-brand-title">إدارة تصاريح أجير</h1>
-            <p className="admin-brand-desc">تعديل البيانات وتوليد روابط التحقق المعتمدة</p>
+            <h1 className="admin-brand-title">إدارة تصاريح أجير (Ajeer Notice Management)</h1>
+            <p className="admin-brand-desc">تعديل البيانات وتوليد روابط التحقق المعتمدة (Edit Data & Generate Verified Links)</p>
           </div>
         </div>
 
@@ -29,10 +29,10 @@ export default function AdminHeader({
             type="button"
             onClick={() => setActiveView && setActiveView('all')}
             className={`nav-btn btn-all-data ${activeView === 'all' ? 'active-view' : 'nav-btn-outline'}`}
-            title="عرض جميع البيانات والروابط التي تم إنشاؤها"
+            title="عرض جميع البيانات والروابط التي تم إنشاؤها (View All Data & Links)"
           >
             <span className="btn-icon">📋</span>
-            <span>جميع البيانات (All Data)</span>
+            <span>جميع البيانات والروابط (All Data & Links)</span>
             <span className="nav-badge-pill">{historyCount}</span>
           </button>
 
@@ -44,9 +44,9 @@ export default function AdminHeader({
               if (setActiveView) setActiveView('create');
             }}
             className={`nav-btn ${activeView === 'create' ? 'nav-btn-primary' : 'nav-btn-outline'}`}
-            title="تفريغ الحقول لإنشاء تصريح جديد"
+            title="تفريغ الحقول لإنشاء تصريح جديد (Create New Notice)"
           >
-            <span>+ تصريح جديد</span>
+            <span>+ تصريح جديد (+ New Notice)</span>
           </button>
 
           {/* Home Page Link */}
@@ -55,9 +55,9 @@ export default function AdminHeader({
             target="_blank"
             rel="noopener noreferrer"
             className="nav-btn nav-btn-outline"
-            title="معاينة الصفحة الرئيسية"
+            title="معاينة الصفحة الرئيسية (View Home Page)"
           >
-            <span>عرض الصفحة الرئيسية</span>
+            <span>الصفحة الرئيسية (Home Page)</span>
             <span className="arrow-icon">↗</span>
           </a>
         </div>

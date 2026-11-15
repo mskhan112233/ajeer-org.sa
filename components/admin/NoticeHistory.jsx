@@ -33,17 +33,17 @@ export default function NoticeHistory({
       {/* Top Stats Chips */}
       <div className="history-stats-bar">
         <div className="stat-chip stat-chip-all">
-          <span className="stat-chip-label">إجمالي الروابط والتصاريح:</span>
+          <span className="stat-chip-label">إجمالي الروابط والتصاريح (Total Notices & Links):</span>
           <span className="stat-chip-val">{history.length}</span>
         </div>
         <div className="stat-chip stat-chip-valid">
           <span className="stat-chip-dot dot-valid" />
-          <span className="stat-chip-label">تصاريح سارية:</span>
+          <span className="stat-chip-label">تصاريح سارية (Valid Notices):</span>
           <span className="stat-chip-val">{validCount}</span>
         </div>
         <div className="stat-chip stat-chip-invalid">
           <span className="stat-chip-dot dot-invalid" />
-          <span className="stat-chip-label">تصاريح منتهية:</span>
+          <span className="stat-chip-label">تصاريح منتهية (Expired Notices):</span>
           <span className="stat-chip-val">{invalidCount}</span>
         </div>
       </div>
@@ -51,7 +51,7 @@ export default function NoticeHistory({
       {/* Header with Search and Actions */}
       <div className="history-panel-header">
         <div className="history-title-box">
-          <h2 className="history-title">سجل جميع البيانات والروابط</h2>
+          <h2 className="history-title">سجل جميع البيانات والروابط (All Data & Links Records)</h2>
           <span className="history-count">({history.length})</span>
         </div>
 
@@ -61,7 +61,7 @@ export default function NoticeHistory({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="بحث برقم التصريح، اسم العامل، أو الإقامة..."
+              placeholder="بحث برقم التصريح، اسم العامل، أو الإقامة (Search Notice #, Worker, or Iqama)..."
               className="history-search-input"
             />
             {search && (
@@ -69,7 +69,7 @@ export default function NoticeHistory({
                 type="button"
                 onClick={() => setSearch('')}
                 className="search-clear-btn"
-                title="مسح البحث"
+                title="مسح البحث (Clear Search)"
               >
                 ✕
               </button>
@@ -81,9 +81,9 @@ export default function NoticeHistory({
               type="button"
               onClick={onRefresh}
               className="btn-history-refresh"
-              title="تحديث البيانات من السحابة"
+              title="تحديث البيانات من السحابة (Refresh from Firebase)"
             >
-              🔄 تحديث
+              🔄 تحديث (Refresh)
             </button>
           )}
 
@@ -92,9 +92,9 @@ export default function NoticeHistory({
               type="button"
               onClick={onNewNotice}
               className="btn-history-add"
-              title="إنشاء تصريح جديد"
+              title="إنشاء تصريح جديد (Create New Notice)"
             >
-              + تصريح جديد
+              + تصريح جديد (+ New Notice)
             </button>
           )}
         </div>
@@ -104,14 +104,14 @@ export default function NoticeHistory({
       <div className="history-table-wrapper">
         {loading ? (
           <div className="history-loading">
-            <LoadingSpinner text="جاري تحميل السجل..." />
+            <LoadingSpinner text="جاري تحميل السجل من فايربيس... (Loading from Firebase...)" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="empty-state-wrapper">
             <EmptyState
               icon="📭"
-              title={search ? 'لا توجد نتائج مطابقة' : 'لا توجد تصاريح أو روابط محفوظة'}
-              description={search ? 'جرّب البحث بكلمات أخرى أو مسح حقل البحث' : 'لم يتم إنشاء أي تصاريح بعد. اضغط على الزر أدناه لإنشاء أول تصريح ورابط'}
+              title={search ? 'لا توجد نتائج مطابقة (No Matching Records)' : 'لا توجد تصاريح أو روابط محفوظة (No Saved Records)'}
+              description={search ? 'جرّب البحث بكلمات أخرى أو مسح حقل البحث (Try different search keywords)' : 'لم يتم إنشاء أي تصاريح بعد في فايربيس (No notices created yet in Firebase)'}
             />
             {!search && onNewNotice && (
               <div className="empty-action-box">
@@ -120,7 +120,7 @@ export default function NoticeHistory({
                   onClick={onNewNotice}
                   className="nav-btn nav-btn-primary"
                 >
-                  + إنشاء تصريح جديد الآن
+                  + إنشاء تصريح جديد الآن (+ Create New Notice Now)
                 </button>
               </div>
             )}
@@ -129,12 +129,12 @@ export default function NoticeHistory({
           <table className="clean-table">
             <thead>
               <tr>
-                <th>رقم التصريح</th>
-                <th>العامل</th>
-                <th>المنشأة</th>
-                <th>فترة الصلاحية</th>
-                <th>الحالة</th>
-                <th className="text-center">الرابط المعتمد والإجراءات</th>
+                <th>رقم التصريح (Notice #)</th>
+                <th>العامل (Worker)</th>
+                <th>المنشأة (Facility)</th>
+                <th>فترة الصلاحية (Validity Period)</th>
+                <th>الحالة (Status)</th>
+                <th className="text-center">الرابط المعتمد والإجراءات (Link & Actions)</th>
               </tr>
             </thead>
             <tbody>

@@ -10,6 +10,7 @@ export function useAdminNotices() {
   const [createdNotice, setCreatedNotice] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState(null);
+  const [isDirty, setIsDirty] = useState(false);
 
   // Fetch history on mount
   const fetchHistory = useCallback(async () => {
@@ -38,6 +39,7 @@ export function useAdminNotices() {
   // Handle form field change
   const handleChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    setIsDirty(true);
   }, []);
 
   // Set validity state
@@ -47,6 +49,7 @@ export function useAdminNotices() {
       isValid,
       statusText: isValid ? "ساري / فعال" : "منتهي / ملغي"
     }));
+    setIsDirty(true);
   }, []);
 
   // Save notice and generate link (or update existing)
@@ -100,6 +103,7 @@ export function useAdminNotices() {
 
       setCreatedNotice(newRecord);
       setShowModal(true);
+      setIsDirty(false);
       fetchHistory();
       return newRecord;
     } catch (err) {
@@ -123,6 +127,7 @@ export function useAdminNotices() {
       occupation: ""
     });
     setCreatedNotice(null);
+    setIsDirty(false);
   }, []);
 
   // Delete notice (from Firestore, server storage, and UI)
@@ -168,6 +173,7 @@ export function useAdminNotices() {
   // Load an existing record into form
   const handleEdit = useCallback((record) => {
     setFormData({ ...DEFAULT_NOTICE_DATA, ...record });
+    setIsDirty(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
@@ -180,6 +186,7 @@ export function useAdminNotices() {
     showModal,
     setShowModal,
     error,
+    isDirty,
     handleChange,
     handleStatusChange,
     handleSave,

@@ -16,10 +16,10 @@ export default function GeneratedLinkModal({ notice, onClose, onViewAll }) {
         <div className="modal-top">
           <div className="modal-icon-circle">✓</div>
           <div className="modal-header-text">
-            <h3 className="modal-title">تم حفظ التصريح وإنشاء الرابط</h3>
-            <p className="modal-subtitle">انسخ الرابط وشاركه لعرض صفحة التحقق المعتمدة فوراً</p>
+            <h3 className="modal-title">تم حفظ التصريح في فايربيس (Notice Saved to Firebase)</h3>
+            <p className="modal-subtitle">انسخ الرابط وشاركه لعرض صفحة التحقق فوراً (Copy & share link to view page)</p>
           </div>
-          <button type="button" className="modal-close-icon" onClick={onClose} aria-label="إغلاق">
+          <button type="button" className="modal-close-icon" onClick={onClose} aria-label="إغلاق (Close)">
             ✕
           </button>
         </div>
@@ -27,24 +27,24 @@ export default function GeneratedLinkModal({ notice, onClose, onViewAll }) {
         {/* Quick summary badges */}
         <div className="modal-summary-row">
           <div className="summary-pill">
-            <span className="pill-muted">رقم التصريح:</span>
+            <span className="pill-muted">رقم التصريح (Notice #):</span>
             <strong>#{notice.noticeNumber || '—'}</strong>
           </div>
           <div className="summary-pill">
-            <span className="pill-muted">العامل:</span>
+            <span className="pill-muted">العامل (Worker):</span>
             <strong>{notice.workerName || '—'}</strong>
           </div>
           <div className="summary-pill">
             <span className={`status-tag ${isValid ? 'tag-valid' : 'tag-invalid'}`}>
               <span className="tag-dot" />
-              <span>{isValid ? 'ساري' : 'منتهي'}</span>
+              <span>{isValid ? 'ساري (Valid)' : 'منتهي (Expired)'}</span>
             </span>
           </div>
         </div>
 
         {/* URL Box with 1-Click Copy */}
         <div className="modal-url-box">
-          <label className="url-box-label">رابط التحقق المباشر:</label>
+          <label className="url-box-label">رابط التحقق المباشر (Direct Verification Link):</label>
           <div className="url-copy-row">
             <input
               type="text"
@@ -59,11 +59,11 @@ export default function GeneratedLinkModal({ notice, onClose, onViewAll }) {
               onClick={() => copy(url)}
               className={`url-copy-btn ${copied ? 'copied' : ''}`}
             >
-              {copied ? 'تم النسخ ✓' : 'نسخ الرابط'}
+              {copied ? 'تم النسخ ✓ (Copied)' : 'نسخ الرابط (Copy Link)'}
             </button>
           </div>
           {copied && (
-            <p className="copy-feedback-msg">✓ تم نسخ الرابط إلى الحافظة بنجاح!</p>
+            <p className="copy-feedback-msg">✓ تم نسخ الرابط إلى الحافظة بنجاح! (Link copied successfully!)</p>
           )}
         </div>
 
@@ -75,7 +75,7 @@ export default function GeneratedLinkModal({ notice, onClose, onViewAll }) {
             rel="noopener noreferrer"
             className="modal-btn-preview"
           >
-            فتح الرابط ومعاينته ↗
+            فتح الرابط ومعاينته ↗ (Open & View Link)
           </a>
 
           {onViewAll && (
@@ -87,7 +87,7 @@ export default function GeneratedLinkModal({ notice, onClose, onViewAll }) {
               }}
               className="modal-btn-view-all"
             >
-              📋 عرض في سجل الروابط (All Data)
+              📋 عرض في سجل الروابط (View in All Data)
             </button>
           )}
 
@@ -96,7 +96,7 @@ export default function GeneratedLinkModal({ notice, onClose, onViewAll }) {
             onClick={onClose}
             className="modal-btn-dismiss"
           >
-            إغلاق
+            إغلاق (Close)
           </button>
         </div>
       </div>

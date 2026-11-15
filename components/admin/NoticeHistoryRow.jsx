@@ -40,7 +40,7 @@ export default function NoticeHistoryRow({
       <td className="cell-status">
         <span className={`status-tag ${isNoticeValid ? 'tag-valid' : 'tag-invalid'}`}>
           <span className="tag-dot" />
-          <span>{isNoticeValid ? 'ساري' : 'منتهي'}</span>
+          <span>{isNoticeValid ? 'ساري (Valid)' : 'منتهي (Expired)'}</span>
         </span>
       </td>
 
@@ -50,8 +50,8 @@ export default function NoticeHistoryRow({
           <CopyButton
             text={directUrl}
             className="row-action-btn btn-copy"
-            defaultLabel="نسخ الرابط"
-            copiedLabel="تم النسخ ✓"
+            defaultLabel="نسخ (Copy)"
+            copiedLabel="تم ✓ (Copied)"
             icon="🔗"
           />
 
@@ -60,32 +60,34 @@ export default function NoticeHistoryRow({
             target="_blank"
             rel="noopener noreferrer"
             className="row-action-btn btn-view"
-            title="معاينة رابط التحقق المباشر"
+            title="فتح صفحة التحقق المعتمدة (Open Verification Page)"
           >
-            فتح ↗
+            فتح ↗ (Open)
           </a>
 
           <button
             type="button"
             onClick={() => onEdit(notice)}
             className="row-action-btn btn-edit"
-            title="تعديل هذا التصريح"
+            title="تعديل هذا التصريح (Edit Notice)"
           >
-            تعديل
+            تعديل (Edit)
           </button>
 
           <button
             type="button"
             onClick={() => onDelete(token)}
             className="row-action-btn btn-delete"
-            title="حذف هذا التصريح"
+            title="حذف هذا التصريح (Delete Notice)"
           >
-            ✕
+            ✕ حذف (Delete)
           </button>
         </div>
-        {/* URL Path snippet */}
-        <div className="row-url-preview" title={directUrl}>
-          <code>{directUrl.length > 50 ? `${directUrl.slice(0, 48)}...` : directUrl}</code>
+        {/* URL Path snippet (Clickable directly to open page) */}
+        <div className="row-url-preview" title="اضغط لفتح صفحة التحقق (Click to open verification page)">
+          <a href={directUrl} target="_blank" rel="noopener noreferrer" className="row-direct-link">
+            <code>{directUrl.length > 50 ? `${directUrl.slice(0, 48)}...` : directUrl}</code>
+          </a>
         </div>
       </td>
     </tr>

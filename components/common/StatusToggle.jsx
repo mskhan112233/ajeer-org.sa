@@ -6,7 +6,7 @@ import React from 'react';
 export default function StatusToggle({ isValid, onChange }) {
   return (
     <div className="status-segment-wrapper">
-      <span className="status-segment-label">حالة صلاحية التصريح:</span>
+      <span className="status-segment-label">حالة صلاحية التصريح (Permit Validity Status):</span>
       <div className="status-segment-control">
         <button
           type="button"
@@ -14,7 +14,7 @@ export default function StatusToggle({ isValid, onChange }) {
           className={`status-segment-btn segment-valid ${isValid ? 'active' : ''}`}
         >
           <span className="dot-indicator dot-valid" />
-          <span>ساري / فعال</span>
+          <span>ساري / فعال (Valid / Active)</span>
         </button>
 
         <button
@@ -23,7 +23,7 @@ export default function StatusToggle({ isValid, onChange }) {
           className={`status-segment-btn segment-invalid ${!isValid ? 'active' : ''}`}
         >
           <span className="dot-indicator dot-invalid" />
-          <span>منتهي / ملغي</span>
+          <span>منتهي / ملغي (Expired / Cancelled)</span>
         </button>
       </div>
     </div>

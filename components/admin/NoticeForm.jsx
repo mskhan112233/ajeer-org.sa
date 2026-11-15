@@ -9,7 +9,8 @@ export default function NoticeForm({
   onStatusChange,
   onSubmit,
   saving,
-  onReset
+  onReset,
+  isDirty = false
 }) {
   const isEditing = Boolean(formData?.token);
 
@@ -19,16 +20,16 @@ export default function NoticeForm({
       {isEditing && (
         <div className="form-edit-banner">
           <div className="edit-banner-info">
-            <span className="edit-badge">وضع التعديل ✏️</span>
-            <span>جاري تعديل بيانات التصريح: <strong>#{formData.noticeNumber || ''}</strong></span>
+            <span className="edit-badge">وضع التعديل (Edit Mode) ✏️</span>
+            <span>جاري تعديل بيانات التصريح (Editing Notice): <strong>#{formData.noticeNumber || ''}</strong></span>
           </div>
           <button
             type="button"
             onClick={onReset}
             className="btn-cancel-edit"
-            title="إلغاء التعديل والعودة لإنشاء تصريح جديد"
+            title="إلغاء التعديل والبدء بتصريح جديد (Cancel Edit & Start New)"
           >
-            ✕ إلغاء التعديل والبدء بتصريح جديد
+            ✕ إلغاء التعديل (Cancel Edit)
           </button>
         </div>
       )}
@@ -42,28 +43,28 @@ export default function NoticeForm({
       </div>
 
       <div className="form-panel-body">
-        {/* Section 1: بيانات التصريح */}
+        {/* Section 1: بيانات التصريح (Notice Details) */}
         <div className="form-section">
-          <div className="form-section-title">بيانات التصريح</div>
+          <div className="form-section-title">بيانات التصريح (Notice Details)</div>
           <div className="form-grid-2">
             <InputField
-              label="رقم التصريح"
+              label="رقم التصريح (Notice Number)"
               name="noticeNumber"
               value={formData.noticeNumber}
               onChange={onChange}
-              placeholder="مثال: TQ6258541"
+              placeholder="مثال (e.g.): TQ6258541"
               required
             />
             <InputField
-              label="نوع التصريح"
+              label="نوع التصريح (Notice Type)"
               name="noticeType"
               value={formData.noticeType}
               onChange={onChange}
-              placeholder="مثال: تصريح إعارة أجير"
+              placeholder="مثال (e.g.): تصريح إعارة أجير"
               required
             />
             <InputField
-              label="تاريخ بداية التصريح"
+              label="تاريخ بداية التصريح (Start Date)"
               name="startDate"
               type="date"
               value={formData.startDate}
@@ -71,7 +72,7 @@ export default function NoticeForm({
               required
             />
             <InputField
-              label="تاريخ نهاية التصريح"
+              label="تاريخ نهاية التصريح (End Date)"
               name="endDate"
               type="date"
               value={formData.endDate}
@@ -83,82 +84,82 @@ export default function NoticeForm({
 
         <div className="form-divider" />
 
-        {/* Section 2: بيانات العامل */}
+        {/* Section 2: بيانات العامل (Worker Details) */}
         <div className="form-section">
-          <div className="form-section-title">بيانات العامل</div>
+          <div className="form-section-title">بيانات العامل (Worker Details)</div>
           <div className="form-grid-2">
             <InputField
-              label="اسم العامل بالكامل"
+              label="اسم العامل بالكامل (Worker Full Name)"
               name="workerName"
               value={formData.workerName}
               onChange={onChange}
-              placeholder="الاسم الكامل كما في وثيقة الإقامة"
+              placeholder="الاسم الكامل كما في الإقامة (Full Name as in Iqama)"
               required
             />
             <InputField
-              label="رقم الهوية / الإقامة"
+              label="رقم الهوية / الإقامة (National ID / Iqama Number)"
               name="iqamaNumber"
               value={formData.iqamaNumber}
               onChange={onChange}
-              placeholder="10 أرقام (مثال: 2585244649)"
+              placeholder="10 أرقام (10 Digits - e.g. 2585244649)"
               required
             />
             <InputField
-              label="الجنسية"
+              label="الجنسية (Nationality)"
               name="nationality"
               value={formData.nationality}
               onChange={onChange}
-              placeholder="مثال: باكستاني / هندي / مصري"
+              placeholder="مثال (e.g.): باكستاني / مصري / هندي"
               required
             />
             <InputField
-              label="المهنة"
+              label="المهنة (Occupation)"
               name="occupation"
               value={formData.occupation}
               onChange={onChange}
-              placeholder="مثال: عامل تحميل وتنزيل / محاسب"
+              placeholder="مثال (e.g.): عامل تحميل وتنزيل / محاسب"
               required
             />
             <SelectField
-              label="الجنس"
+              label="الجنس (Gender)"
               name="gender"
               value={formData.gender || "ذكر"}
               onChange={onChange}
               options={[
-                { value: "ذكر", label: "ذكر" },
-                { value: "أنثى", label: "أنثى" }
+                { value: "ذكر", label: "ذكر (Male)" },
+                { value: "أنثى", label: "أنثى (Female)" }
               ]}
             />
             <InputField
-              label="تاريخ الميلاد"
+              label="تاريخ الميلاد (Birth Date)"
               name="birthDate"
               value={formData.birthDate || "-"}
               onChange={onChange}
-              placeholder="مثال: 1990-05-15 أو -"
+              placeholder="مثال (e.g.): 1990-05-15 أو -"
             />
           </div>
         </div>
 
         <div className="form-divider" />
 
-        {/* Section 3: بيانات المنشأة */}
+        {/* Section 3: بيانات المنشأة (Facility Details) */}
         <div className="form-section">
-          <div className="form-section-title">بيانات المنشأة</div>
+          <div className="form-section-title">بيانات المنشأة (Facility Details)</div>
           <div className="form-grid-2">
             <InputField
-              label="رقم المنشأة"
+              label="رقم المنشأة (Facility Number)"
               name="facilityNumber"
               value={formData.facilityNumber}
               onChange={onChange}
-              placeholder="مثال: 14-4006197"
+              placeholder="مثال (e.g.): 14-4006197"
               required
             />
             <InputField
-              label="اسم المنشأة"
+              label="اسم المنشأة (Facility Name)"
               name="facilityName"
               value={formData.facilityName}
               onChange={onChange}
-              placeholder="اسم المنشأة أو الشركة"
+              placeholder="اسم المنشأة أو الشركة (Facility / Company Name)"
               required
             />
           </div>
@@ -166,29 +167,38 @@ export default function NoticeForm({
       </div>
 
       {/* Action Footer Bar */}
-      <div className="form-panel-footer">
-        <button
-          type="submit"
-          disabled={saving}
-          className="submit-btn"
-        >
-          {saving ? (
-            <span>جاري حفظ التعديلات...</span>
-          ) : isEditing ? (
-            <span>💾 حفظ التعديلات وتحديث الرابط</span>
-          ) : (
-            <span>حفظ التصريح وإنشاء الرابط المباشر 🔗</span>
-          )}
-        </button>
+      <div className={`form-panel-footer ${isDirty ? 'has-unsaved-changes' : ''}`}>
+        {isDirty && (
+          <div className="unsaved-alert-pill">
+            <span className="unsaved-dot" />
+            <span>لديك تعديلات غير محفوظة (You have unsaved changes)</span>
+          </div>
+        )}
 
-        <button
-          type="button"
-          onClick={onReset}
-          className="reset-btn"
-          title="تفريغ الحقول"
-        >
-          إفراغ الحقول
-        </button>
+        <div className="footer-buttons-group">
+          <button
+            type="submit"
+            disabled={saving}
+            className={`submit-btn ${isDirty ? 'pulse-save' : ''}`}
+          >
+            {saving ? (
+              <span>جاري الحفظ في فايربيس... (Saving to Firebase...)</span>
+            ) : isEditing ? (
+              <span>💾 حفظ التعديلات في فايربيس (Save Changes to Firebase)</span>
+            ) : (
+              <span>✓ حفظ التصريح وإنشاء الرابط (Save Notice & Generate Link) 🔗</span>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={onReset}
+            className="reset-btn"
+            title="تفريغ الحقول (Reset Fields)"
+          >
+            إفراغ الحقول (Reset Fields)
+          </button>
+        </div>
       </div>
     </form>
   );

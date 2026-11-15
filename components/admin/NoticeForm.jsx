@@ -194,9 +194,9 @@ export default function NoticeForm({
             type="button"
             onClick={onReset}
             className="reset-btn"
-            title="تفريغ الحقول (Reset Fields)"
+            title="استعادة البيانات الافتراضية (Reset to Default)"
           >
-            إفراغ الحقول (Reset Fields)
+            استعادة البيانات الافتراضية (Reset to Default)
           </button>
         </div>
       </div>

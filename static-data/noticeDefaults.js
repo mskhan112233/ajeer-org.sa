@@ -29,7 +29,7 @@ export const DEFAULT_NOTICE_DATA = {
   nationalityLabel: "الجنسية",
   nationality: "باكستاني",
   occupationLabel: "المهنة",
-  occupation: "عامل تحميل وتنزيل ",
+  occupation: "عامل تحميل وتنزيل",
   genderLabel: "الجنس",
   gender: "ذكر",
   birthDateLabel: "تاريخ الميلاد",
@@ -40,7 +40,7 @@ export const DEFAULT_NOTICE_DATA = {
   facilityNumberLabel: "رقم المنشأة",
   facilityNumber: "14-4006197",
   facilityNameLabel: "اسم المنشأة",
-  facilityName: "مؤسسة مدى محمد ضيف الله  بن صغير للمقاولات العامة",
+  facilityName: "مؤسسة مدى محمد ضيف الله بن صغير للمقاولات العامة",
 
   // Footer Links & Partner URLs
   footerCol1Title: "أجير",

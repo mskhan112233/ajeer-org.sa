@@ -24,7 +24,7 @@
     "nationalityLabel": "الجنسية",
     "nationality": "باكستاني",
     "occupationLabel": "المهنة",
-    "occupation": "عامل تحميل وتنزيل ",
+    "occupation": "عامل تحميل وتنزيل",
     "genderLabel": "الجنس",
     "gender": "ذكر",
     "birthDateLabel": "تاريخ الميلاد",
@@ -33,7 +33,7 @@
     "facilityNumberLabel": "رقم المنشأة",
     "facilityNumber": "14-4006197",
     "facilityNameLabel": "اسم المنشأة",
-    "facilityName": "مؤسسة مدى محمد ضيف الله  بن صغير للمقاولات العامة",
+    "facilityName": "مؤسسة مدى محمد ضيف الله بن صغير للمقاولات العامة",
     "footerCol1Title": "أجير",
     "footerLink1Text": "عن أجير",
     "footerLink1Url": "/about",
@@ -60,8 +60,8 @@
     "footerTamkeenUrl": "https://tamkeentech.sa/",
     "footerDigitalStampUrl": "https://raqmi.dga.gov.sa/platforms/DigitalStamp/ShowCertificate/441",
     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzZXJ2aWNlIjoidGVtcHdvcmsiLCJpZCI6IjA1ODY2MzMiLCJpYXQiOjE3OTE0OTAwNTMsInN0YXR1cyI6InZhbGlkIiwic3RhcnRfYXQiOiIyMDI2LTA5LTI3IiwiZW5kX2F0IjoiMjAyNi0xMC0yNyIsInVpZCI6Ims5NzJ4dm11enl4N3h5In0.HTqVDMTMcxubqt3FmYRx6T7fNQGaAJ9s6jhBFxujuTW",
-    "createdAt": "2026-11-05T21:17:49.406Z",
-    "updatedAt": "2026-11-05T21:17:49.406Z"
+    "createdAt": "2026-11-15T22:30:00.000Z",
+    "updatedAt": "2026-11-15T22:30:00.000Z"
   },
   {
     "noticeNumber": "TQ1234567",

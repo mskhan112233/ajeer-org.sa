@@ -16,17 +16,53 @@ export function useAdminNotices() {
   const fetchHistory = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/notices');
-      const json = await res.json();
-      if (json && json.success && Array.isArray(json.data)) {
-        setHistory(json.data);
-      }
-    } catch (err) {
-      console.warn("Failed to load history from API:", err);
+      let list = [];
+
+      // 1. Try API first (loads local + firestore)
       try {
-        const local = localStorage.getItem('ajeer_notices_history');
-        if (local) setHistory(JSON.parse(local));
-      } catch (e) {}
+        const res = await fetch('/api/notices');
+        const json = await res.json();
+        if (json && json.success && Array.isArray(json.data)) {
+          list = json.data;
+        }
+      } catch (apiErr) {
+        console.warn("Failed to load history from API:", apiErr);
+      }
+
+      // 2. Fetch direct client Firestore to ensure instant real-time sync
+      if (typeof window !== 'undefined') {
+        try {
+          const { getAllNoticesFromFirestore } = await import('@/lib/firestoreNotices');
+          const firestoreList = await getAllNoticesFromFirestore();
+          if (firestoreList && Array.isArray(firestoreList) && firestoreList.length > 0) {
+            const map = new Map();
+            list.forEach(item => { if (item?.token) map.set(item.token, item); });
+            firestoreList.forEach(item => { if (item?.token) map.set(item.token, item); });
+            list = Array.from(map.values());
+          }
+        } catch (fErr) {
+          console.warn("Direct Firestore history fetch:", fErr);
+        }
+      }
+
+      // 3. Fallback to localStorage if empty
+      if (list.length === 0 && typeof window !== 'undefined') {
+        try {
+          const local = localStorage.getItem('ajeer_notices_history');
+          if (local) list = JSON.parse(local);
+        } catch (e) {}
+      }
+
+      // Sort newest / updated first (latest at TOP)
+      list.sort((a, b) => {
+        const timeA = new Date(a.updatedAt || a.createdAt || 0).getTime();
+        const timeB = new Date(b.updatedAt || b.createdAt || 0).getTime();
+        return timeB - timeA;
+      });
+
+      setHistory(list);
+    } catch (err) {
+      console.warn("fetchHistory error:", err);
     } finally {
       setLoading(false);
     }
@@ -115,16 +151,11 @@ export function useAdminNotices() {
     }
   }, [formData, fetchHistory]);
 
-  // Reset form
+  // Reset form to default notice data from image
   const handleReset = useCallback(() => {
     setFormData({
       ...DEFAULT_NOTICE_DATA,
-      noticeNumber: "",
-      workerName: "",
-      iqamaNumber: "",
-      facilityNumber: "",
-      facilityName: "",
-      occupation: ""
+      token: undefined
     });
     setCreatedNotice(null);
     setIsDirty(false);

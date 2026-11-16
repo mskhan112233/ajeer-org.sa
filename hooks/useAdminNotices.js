@@ -53,11 +53,18 @@ export function useAdminNotices() {
         } catch (e) {}
       }
 
-      // Normalize all URLs so they are guaranteed public production URLs
-      list = list.map(item => ({
-        ...item,
-        url: sanitizeVerificationUrl(item?.url, item?.token)
-      }));
+      // Normalize all URLs and tokens so they are guaranteed public production URLs and compact 4-line format
+      list = list.map(item => {
+        let itemToken = item?.token;
+        if (itemToken && (itemToken.length > 290 || itemToken.includes('ImRhdGEi') || itemToken.includes('data'))) {
+          itemToken = generateNoticeToken(item);
+        }
+        return {
+          ...item,
+          token: itemToken,
+          url: sanitizeVerificationUrl(item?.url, itemToken)
+        };
+      });
 
       // Sort newest / updated first (latest at TOP)
       list.sort((a, b) => {
@@ -102,7 +109,7 @@ export function useAdminNotices() {
 
     try {
       // Use existing clean token if editing, or generate fresh compact token (never retain old bloated tokens)
-      const isBloatedToken = formData.token && (formData.token.includes('data') || formData.token.length > 500);
+      const isBloatedToken = formData.token && (formData.token.length > 290 || formData.token.includes('ImRhdGEi') || formData.token.includes('data'));
       const token = (!formData.token || isBloatedToken) ? generateNoticeToken(formData) : formData.token;
       const origin = getCleanAppOrigin();
       const fullUrl = `${origin}/notice-verification/${token}`;

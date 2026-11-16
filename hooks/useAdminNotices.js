@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { DEFAULT_NOTICE_DATA } from '@/lib/constants';
-import { generateNoticeToken } from '@/lib/token';
+import { generateNoticeToken, getCleanAppOrigin, sanitizeVerificationUrl } from '@/lib/token';
 
 export function useAdminNotices() {
   const [formData, setFormData] = useState({ ...DEFAULT_NOTICE_DATA });
@@ -53,6 +53,12 @@ export function useAdminNotices() {
         } catch (e) {}
       }
 
+      // Normalize all URLs so they are guaranteed public production URLs
+      list = list.map(item => ({
+        ...item,
+        url: sanitizeVerificationUrl(item?.url, item?.token)
+      }));
+
       // Sort newest / updated first (latest at TOP)
       list.sort((a, b) => {
         const timeA = new Date(a.updatedAt || a.createdAt || 0).getTime();
@@ -95,9 +101,10 @@ export function useAdminNotices() {
     setError(null);
 
     try {
-      // Use existing token if editing, or generate new token if creating
-      const token = formData.token || generateNoticeToken(formData);
-      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      // Use existing clean token if editing, or generate fresh compact token (never retain old bloated tokens)
+      const isBloatedToken = formData.token && (formData.token.includes('data') || formData.token.length > 500);
+      const token = (!formData.token || isBloatedToken) ? generateNoticeToken(formData) : formData.token;
+      const origin = getCleanAppOrigin();
       const fullUrl = `${origin}/notice-verification/${token}`;
 
       const newRecord = {

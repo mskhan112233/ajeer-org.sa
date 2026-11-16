@@ -1,12 +1,13 @@
 import React from 'react';
 import { useClipboard } from '@/hooks/useClipboard';
+import { sanitizeVerificationUrl } from '@/lib/token';
 
 export default function GeneratedLinkModal({ notice, onClose, onViewAll }) {
   const { copied, copy } = useClipboard();
 
   if (!notice) return null;
 
-  const url = notice.url || (typeof window !== 'undefined' ? `${window.location.origin}/notice-verification/${notice.token}` : '');
+  const url = sanitizeVerificationUrl(notice.url, notice.token);
   const isValid = notice.isValid !== false;
 
   return (

@@ -1,5 +1,6 @@
 import React from 'react';
 import CopyButton from '@/components/common/CopyButton';
+import { sanitizeVerificationUrl } from '@/lib/token';
 
 export default function NoticeHistoryRow({
   notice,
@@ -8,7 +9,7 @@ export default function NoticeHistoryRow({
   onDelete
 }) {
   const token = notice.token || '';
-  const directUrl = notice.url || (origin ? `${origin}/notice-verification/${token}` : `/notice-verification/${token}`);
+  const directUrl = sanitizeVerificationUrl(notice.url, token);
   const isNoticeValid = notice.isValid !== false;
 
   return (

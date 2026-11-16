@@ -32,7 +32,14 @@ export async function GET() {
       const timeB = new Date(b.updatedAt || b.createdAt || 0).getTime();
       return timeB - timeA;
     });
-    return NextResponse.json({ success: true, data: notices });
+    return NextResponse.json(
+      { success: true, data: notices },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=60'
+        }
+      }
+    );
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

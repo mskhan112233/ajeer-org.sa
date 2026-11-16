@@ -22,7 +22,14 @@ export async function GET(request, { params }) {
       notice = findNotice(token);
     }
 
-    return NextResponse.json({ success: true, data: notice });
+    return NextResponse.json(
+      { success: true, data: notice },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600'
+        }
+      }
+    );
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

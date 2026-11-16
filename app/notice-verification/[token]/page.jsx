@@ -9,20 +9,9 @@ import { useNoticeData } from '@/hooks/useNoticeData';
 import { useMounted } from '@/hooks/useMounted';
 
 export default function NoticeVerificationPage() {
-  const isMounted = useMounted();
   const params = useParams();
   const token = params?.token ? decodeURIComponent(params.token) : null;
   const { data } = useNoticeData(null, token);
-
-  if (!isMounted) {
-    return (
-      <div
-        className="qiwa-ajeer-app"
-        style={{ minHeight: '100vh', background: '#f5f7f9' }}
-        suppressHydrationWarning
-      />
-    );
-  }
 
   return (
     <div className="qiwa-ajeer-app" suppressHydrationWarning>

@@ -1,17 +1,26 @@
 import { useState, useEffect } from 'react';
-import { DEFAULT_NOTICE_DATA } from '@/lib/constants';
+import { DEFAULT_NOTICE_DATA, EMPTY_NOTICE_TEMPLATE } from '@/lib/constants';
 import { parseNoticeToken } from '@/lib/token';
 
 // In-memory cache to make page navigation and re-opens instantaneous (0ms)
 const noticeCache = new Map();
 
-export function useNoticeData(initialData = null, token = null) {
+export function useNoticeData(initialData = null, token = null, options = {}) {
+  const serverResolved = Boolean(options?.serverResolved);
+
   const [data, setData] = useState(() => {
-    let initial = {
-      ...DEFAULT_NOTICE_DATA,
-      ...(initialData || {})
-    };
     if (token) {
+      let initial = {
+        ...EMPTY_NOTICE_TEMPLATE,
+        ...(initialData || {})
+      };
+
+      // If SSR already fetched the exact live record from Firestore, use it immediately (0ms, zero flash)
+      if (serverResolved && initialData) {
+        noticeCache.set(token, initial);
+        return initial;
+      }
+
       // 0. Check in-memory cache first (0 ms)
       if (noticeCache.has(token)) {
         return { ...initial, ...noticeCache.get(token) };
@@ -23,13 +32,14 @@ export function useNoticeData(initialData = null, token = null) {
           const localHistory = JSON.parse(localStorage.getItem('ajeer_notices_history') || '[]');
           const found = localHistory.find(item => item?.token === token || item?.noticeNumber === token);
           if (found) {
-            noticeCache.set(token, found);
-            return { ...initial, ...found };
+            const merged = { ...EMPTY_NOTICE_TEMPLATE, ...found };
+            noticeCache.set(token, merged);
+            return merged;
           }
         } catch (e) {}
       }
 
-      // 2. Parse token JWT claims
+      // 2. Parse token JWT claims (clean template only — never shows another person's data)
       try {
         const parsed = parseNoticeToken(token);
         if (parsed) {
@@ -38,7 +48,14 @@ export function useNoticeData(initialData = null, token = null) {
       } catch (e) {
         console.warn("Initial token parse note:", e);
       }
-    } else if (noticeCache.has('__root_notice__')) {
+      return initial;
+    }
+
+    let initial = {
+      ...DEFAULT_NOTICE_DATA,
+      ...(initialData || {})
+    };
+    if (noticeCache.has('__root_notice__')) {
       return { ...initial, ...noticeCache.get('__root_notice__') };
     }
     return initial;
@@ -49,8 +66,14 @@ export function useNoticeData(initialData = null, token = null) {
   useEffect(() => {
     let isCurrent = true;
 
-    // 1. If we have token, fetch live record via fast Edge-cached API
+    // 1. If we have token, skip redundant network call when SSR already delivered the live Firestore record
     if (token) {
+      if (serverResolved) {
+        return () => {
+          isCurrent = false;
+        };
+      }
+
       if (noticeCache.has(token)) {
         const cached = noticeCache.get(token);
         setData(prev => ({ ...prev, ...cached }));
@@ -119,7 +142,7 @@ export function useNoticeData(initialData = null, token = null) {
     return () => {
       isCurrent = false;
     };
-  }, [token]);
+  }, [token, serverResolved]);
 
   // Set document title dynamically
   useEffect(() => {

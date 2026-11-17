@@ -72,3 +72,19 @@ export const DEFAULT_NOTICE_DATA = {
   footerTamkeenUrl: "https://tamkeentech.sa/",
   footerDigitalStampUrl: "https://raqmi.dga.gov.sa/platforms/DigitalStamp/ShowCertificate/441"
 };
+
+// Clean template with only UI labels & static links (zero hardcoded person/company details)
+export const EMPTY_NOTICE_TEMPLATE = {
+  ...DEFAULT_NOTICE_DATA,
+  noticeNumber: "",
+  startDate: "",
+  endDate: "",
+  workerName: "",
+  iqamaNumber: "",
+  nationality: "",
+  occupation: "",
+  gender: "",
+  birthDate: "",
+  facilityNumber: "",
+  facilityName: ""
+};

@@ -22,11 +22,22 @@ export async function GET(request, { params }) {
       notice = findNotice(token);
     }
 
+    if (!notice) {
+      return NextResponse.json(
+        { success: false, data: null },
+        {
+          headers: {
+            'Cache-Control': 'no-store'
+          }
+        }
+      );
+    }
+
     return NextResponse.json(
       { success: true, data: notice },
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600'
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60'
         }
       }
     );
